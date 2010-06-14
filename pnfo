@@ -8,14 +8,28 @@ use Carp;
 my $term = "urxvt -fn xft:'Lucida ConsoleP:pixelsize=10:antialias=0' -fg '#ffffff' -uc +sb";
 my $viewer = "vimpager-nfo";
 
-my $dir = shift // '.';
-my @nfos = grep{/\.nfo$/} glob("$dir/*");
+my @nfos;
+my $dir = shift;
 
-unless(@nfos) {
-  print "No NFO's here!\n";
-  exit 1;
+if(!$dir) {
+  @nfos = grep{/\.nfo$/} glob("./*");
 }
 
+if(-f $dir and $dir =~ /\.nfo$/) {
+  system("$term -e $viewer \"$dir\"") == 0 or croak();
+  exit 0;
+}
 
-system("$term -e $viewer \"@nfos\"") == 0 or croak "Whoops! $!";
+if(-d $dir) {
+  @nfos = grep{/\.nfo$/} glob("$dir/*");
+  if(!@nfos) {
+    print "No NFO's here!\n";
+    exit 1;
+  }
+}
+
+for my $nfo(@nfos) {
+  system("$term -e $viewer \"$nfo\"") == 0 or croak();
+}
+
 
