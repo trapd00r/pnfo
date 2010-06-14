@@ -9,27 +9,45 @@ my $term = "urxvt -fn xft:'Lucida ConsoleP:pixelsize=10:antialias=0' -fg '#fffff
 my $viewer = "vimpager-nfo";
 
 my @nfos;
-my $dir = shift;
 
-if(!$dir) {
+# view all nfos in ./ if no arg is supplied
+if(!@ARGV) {
   @nfos = grep{/\.nfo$/} glob("./*");
+  if(!@nfos) {
+    print "No NFO files found in ./\n";
+    exit 1;
+  }
+  view(@nfos);
+  exit 0;
 }
-
-if(-f $dir and $dir =~ /\.nfo$/) {
-  system("$term -e $viewer \"$dir\"") == 0 or croak();
+# if there's a second arg, the user is using globbing
+if($ARGV[1]) {
+  print "",$_,"\n" for @ARGV;
+  view(@ARGV);
   exit 0;
 }
 
-if(-d $dir) {
-  @nfos = grep{/\.nfo$/} glob("$dir/*");
-  if(!@nfos) {
-    print "No NFO's here!\n";
-    exit 1;
-  }
+# single file
+if(-f $ARGV[0] and $ARGV[0] =~ /\.nfo$/) {
+  view($ARGV[0]);
+  exit 0;
 }
 
-for my $nfo(@nfos) {
-  system("$term -e $viewer \"$nfo\"") == 0 or croak();
+# traverse the directory specified
+if(-d $ARGV[0]) {
+  @nfos = grep{/\.nfo$/} glob("$ARGV[0]/*");
+  if(!@nfos) {
+    print "No NFO files found in $ARGV[0]\n";
+    exit 1;
+  }
+  view(@nfos);
+}
+
+sub view {
+  my @files = @_;
+  for my $file(@files) {
+    system("$term -e $viewer \"$file\"") == 0 or croak();
+  }
 }
 
 
