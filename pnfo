@@ -12,7 +12,7 @@ my @nfos;
 
 # view all nfos in ./ if no arg is supplied
 if(!@ARGV) {
-  @nfos = grep{/\.nfo$/} glob("./*");
+  @nfos = grep{/\.nfo$/} glob("*/*");
   if(!@nfos) {
     print "No NFO files found in ./\n";
     exit 1;
