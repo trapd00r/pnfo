@@ -49,7 +49,6 @@ sub view {
   my @files = @_;
   for my $file(@files) {
     system(@term, $file);
-    #system("$term -e $viewer \"$file\"") == 0 or croak();
   }
 }
 
