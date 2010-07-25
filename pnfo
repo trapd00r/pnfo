@@ -8,43 +8,23 @@ use Carp;
 my $term = "urxvt -fn xft:'Lucida ConsoleP:pixelsize=10:antialias=0' -fg '#ffffff' -uc +sb";
 my $viewer = "vimpager-nfo";
 
-my @nfos;
+my(@nfos) = (undef);
 
-# view all nfos in ./ if no arg is supplied
-if(!@ARGV) {
-  @nfos = grep{/\.nfo$/} glob("*/*");
-  if(!@nfos) {
-    print "No NFO files found in ./\n";
-    exit 1;
+view(find("./")) unless(@ARGV);
+
+sub find {
+  my $dir = shift;
+  return(1) unless(-d $dir);
+
+  for(glob("$dir/*")) {
+    if(-d $_) {
+      find($_);
+    }
+    elsif(-f $_ and $_ =~ /\.nfo$/) {
+      push(@nfos, $_);
+    }
   }
-  print "$_\n" for @nfos;
-  view(@nfos);
-  exit 0;
-}
-# if there's a second arg, the user is using globbing
-if($ARGV[1]) {
-  print "$_\n" for @ARGV;
-  view(@ARGV);
-  exit 0;
-}
-
-# single file
-if(-f $ARGV[0] and $ARGV[0] =~ /\.nfo$/) {
-  print "$ARGV[0]\n";
-  view($ARGV[0]);
-  exit 0;
-}
-
-# traverse the directory specified
-if(-d $ARGV[0]) {
-  @nfos = grep{/\.nfo$/} glob("$ARGV[0]/*");
-  if(!@nfos) {
-    print "No NFO files found in $ARGV[0]\n";
-    exit 1;
-  }
-  print "$_\n" for @nfos;
-  view(@nfos);
-  exit 0;
+  return(@nfos);
 }
 
 sub view {
