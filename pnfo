@@ -1,37 +1,87 @@
 #!/usr/bin/perl
 use strict;
 use Carp;
-# pnfo
-# NFO files are ASCII-art with the cp437 codepage
-# Lucida ConsoleP has support for all the cp437 chars
 
-my $term = "urxvt -fn xft:'Lucida ConsoleP:pixelsize=10:antialias=0' -fg '#ffffff' -uc +sb";
-my $viewer = "vimpager-nfo";
+my $viewer = 'vimpager-nfo';
 
-my(@nfos) = (undef);
+my @term = (
+  'urxvt',
+  '-fn', 'xft:Lucida ConsoleP:pixelsize=10:antialias=0',
+  '-fg', '#ffffff',
+  '-uc',
+  '+sb',
+  '-e' , $viewer,
+);
 
-view(find("./")) unless(@ARGV);
+my @nfos = ();
+
+if(!@ARGV) {
+  find('.');
+  if(!@nfos) {
+    print "No NFO files found\n";
+    exit(1);
+  }
+  view(@nfos);
+  exit(0);
+}
+
+find(@ARGV); # populate @nfos
+view(@nfos) unless(!@nfos);
 
 sub find {
-  my $dir = shift;
-  return(1) unless(-d $dir);
+  my @dirs = @_;
 
-  for(glob("$dir/*")) {
-    if(-d $_) {
-      find($_);
+  for my $dir(@dirs) {
+    if(-f $dir and $dir =~ /\.nfo$/) {
+      printf("\033[1mFound \033[33m%s\033[0m\n", $dir);
+      push(@nfos, $dir);
     }
-    elsif(-f $_ and $_ =~ /\.nfo$/) {
-      push(@nfos, $_);
+    elsif(-d $dir) {
+      printf("\033[1m   => \033[0m%s\n", $dir);
+      for(glob("$dir/*")) {
+        find($_);
+      }
     }
   }
-  return(@nfos);
 }
 
 sub view {
   my @files = @_;
   for my $file(@files) {
-    system("$term -e $viewer \"$file\"") == 0 or croak();
+    system(@term, $file);
+    #system("$term -e $viewer \"$file\"") == 0 or croak();
   }
 }
 
+=pod
 
+=head1 NAME
+
+  pnfo - view NFO files with the ASCII art fully preserved
+
+=head1 SYNOPSIS
+
+  pnfo [OPTION]... [DIR/FILES]
+
+  pnfo
+  pnfo foo/bar.nfo
+  pnfo foo/
+  pnfo fo*/
+
+=head1 DESCRIPTION
+
+NFO files contains ASCII art within the cp437 codepage.
+
+Lucida ConsoleP is the only font to my knowledge that fully supports these.
+
+=head1 COPYRIGHT
+
+Copyright 2010 Magnus Woldrich.
+
+License GPLv2.
+
+=head1 SEE ALSO
+
+some friends and/or girls
+
+=cut
