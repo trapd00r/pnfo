@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+our $APP     = 'pnfo';
+our $VERSION = 1.1;
 use strict;
 use Carp;
 
