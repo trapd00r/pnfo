@@ -7,7 +7,7 @@ file="$@"
 if [ -z "$file" ]; then file="-"; fi
 
 less_vim() {
-    vim -pR \
+    /usr/bin/vim -pR \
     -c 'let no_plugin_maps = 1' \
     -c 'set scrolloff=999' \
     -c 'runtime! macros/less.vim' \
