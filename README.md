@@ -1,17 +1,32 @@
 pnfo
 ====
 
-pnfo allows you to read NFO files with all the glossy ascii-art and color by
-using Vim.
+pnfo allows you to read NFO files with all the glossy ansi-art and color in Vim.
 
-You'll need Vim, Lucida ConsoleP (Supports all cp437 chars), urxvt and
-the [neverland vim theme pack][1] if you don't plan on using your own.
+Prerequisites
+=============
 
-[1]:http://github.com/trapd00r/neverland-vim-theme "neverland vim theme"
+Vim
 
-    $ perl Makefile.PL
-    $ make
-    # make install
+The Lucida ConsoleP font
+
+A sane terminal
+
+Optional
+========
+
+The [Neverland Vim theme][0]
+
+Installation
+=============
+
+    git clone git://github.com/trapd00r/pnfo.git && cd pnfo
+    perl Makefile.PL && make && su -c 'make install'
+
+
+Preview
+=======
 
 ![screenshot](http://perl.japh.se/devel/pnfo/pnfo.png)
 
+[0]:http://github.com/trapd00r/neverland-vim-theme "neverland vim theme"
