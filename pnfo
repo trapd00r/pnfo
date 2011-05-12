@@ -2,21 +2,35 @@
 
 use vars qw($VERSION);
 my $APP  = 'pnfo';
-$VERSION = '1.20';
+$VERSION = '1.24';
 
 use strict;
 use Carp;
 
 my $viewer = 'vimpager-nfo';
 
-my @term = (
-  'urxvt',
-  '-fn', 'xft:Lucida ConsoleP:pixelsize=10:antialias=0',
-  '-fg', '#ffffff',
-  '-uc',
-  '+sb',
-  '-e' , $viewer,
-);
+my @term;
+
+if($ENV{TERM} =~ m/rxvt-unicode|urxvt/) {
+  @term = (
+    'urxvt',
+    '-fn', 'xft:Lucida ConsoleP:pixelsize=10:antialias=0',
+    '-fg', '#ffffff',
+    '-uc',
+    '+sb',
+    '-e' , $viewer,
+  );
+}
+else {
+  @term = (
+    'xterm',
+    '-fa', 'xft:Lucida ConsoleP:pixelsize=10:antialias=0',
+    '-fg', '#ffffff',
+    '-uc',
+    '+sb',
+    '-e' , $viewer,
+  );
+}
 
 my @nfos = ();
 
@@ -61,31 +75,22 @@ sub view {
 
 =head1 NAME
 
-pnfo - view NFO files with the ASCII art fully preserved
+pnfo - view NFO files with preserved ASCII art in Vim
 
-=head1 SYNOPSIS
+=head1 USAGE
 
   pnfo [OPTION]... [DIR/FILES]
-
-  pnfo
-  pnfo foo/bar.nfo
-  pnfo foo/
-  pnfo fo*/
 
 =head1 DESCRIPTION
 
 NFO files contains ASCII art within the cp437 codepage.
 
-Lucida ConsoleP is the only font to my knowledge that fully supports these.
+I<Lucida ConsoleP> is the only font to my knowledge that fully supports these.
 
 =head1 COPYRIGHT
 
 Copyright 2010, 2011 Magnus Woldrich <magnus@trapd00r.se>. This program is free
 software; you may redistribute it and/or modify it under the same terms as
 Perl itself.
-
-=head1 SEE ALSO
-
-some friends and/or girls
 
 =cut
