@@ -13,11 +13,8 @@ less_vim() {
     -c 'runtime! macros/less.vim' \
     -c 'set foldlevel=999' \
     -c 'set nonumber' \
-    -c ':colorscheme neverland2' \
     -c 'set laststatus=2' \
-    -c 'set textwidth=80' \
-    -c 'set cursorline' \
-    -c 'set ft=config' \
+    -c 'set colorcolumn=0 ft=b cursorline tw=80' \
     "$@"
 }
 
