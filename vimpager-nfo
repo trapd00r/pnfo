@@ -7,14 +7,15 @@ file="$@"
 if [ -z "$file" ]; then file="-"; fi
 
 less_vim() {
+    # the number hack avoids setting nornu which needs >= 7.3
     /usr/bin/vim -pR \
     -c 'let no_plugin_maps = 1' \
     -c 'set scrolloff=999' \
     -c 'runtime! macros/less.vim' \
     -c 'set foldlevel=999' \
-    -c 'set nonumber' \
+    -c 'set number | set nonumber' \
     -c 'set laststatus=2' \
-    -c 'set colorcolumn=0 ft=b cursorline tw=80' \
+    -c 'set colorcolumn=0 ft=b cursorline tw=80 nolist' \
     "$@"
 }
 
